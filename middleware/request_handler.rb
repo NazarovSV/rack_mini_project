@@ -24,7 +24,7 @@ class RequestHandler
 
     result = FormatValidator.new(request.params['format'], @delimiter).validate
 
-    if result.has_error?
+    if result.errors?
       Rack::Response.new(["Unknown time format [#{result.errors.join(', ')}]"],
                          Rack::Utils.status_code(:bad_request), {}).finish
     else

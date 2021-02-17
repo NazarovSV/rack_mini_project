@@ -16,7 +16,7 @@ class FormatValidatorResponce
     @errors << error
   end
 
-  def has_error?
+  def errors?
     @errors.any?
   end
 end
