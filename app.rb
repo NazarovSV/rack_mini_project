@@ -1,8 +1,7 @@
 require_relative 'services/date_formatting_service'
 class App
   def call(env)
-    body = [] << DateFormattingService.new.get_date(env[:date_format])
-    [status, header, body]
+    [status, header, body(env)]
   end
 
   private
@@ -13,5 +12,9 @@ class App
 
   def header
     { 'Content-Type' => 'text/plain' }
+  end
+
+  def body(env)
+    [] << DateFormattingService.new.get_date(env[:date_format])
   end
 end
