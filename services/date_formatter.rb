@@ -22,6 +22,6 @@ class DateFormatter
   end
 
   def invalid_formats(formats)
-    formats.split(DELIMITER).select { |format| !AUTHORIZED_FORMAT.key?(format.downcase.to_sym) }
+    formats.split(DELIMITER).reject { |format| AUTHORIZED_FORMAT.key?(format.downcase.to_sym) }
   end
 end
