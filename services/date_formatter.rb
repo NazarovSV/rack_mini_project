@@ -1,35 +1,27 @@
 # frozen_string_literal: true
 
-require_relative 'date_formatting_response'
-
-class DateFormattingService
+class DateFormatter
   AUTHORIZED_FORMAT = { year: '%Y', month: '%m', day: '%d', hour: '%H', minute: '%M', second: '%S' }.freeze
+  DELIMITER = ','
 
-  def date(formats, delimiter)
-    response = DateFormatterResponse.new
-    result = invalid_formats(formats, delimiter)
+  def date(formats)
+    result = invalid_formats(formats)
 
     if result.any?
-      response.error = "Unknown time format [#{result.join(', ')}]"
+      { error: "Unknown time format [#{result.join(', ')}]" }
     else
-      response.value = formatted_date(formats, delimiter)
+      { value: formatted_date(formats) }
     end
-
-    response
   end
 
   private
 
-  def formatted_date(formats, delimiter)
-    time_format = formats.split(delimiter).map { |format| AUTHORIZED_FORMAT[format.downcase.to_sym] }.join('/')
+  def formatted_date(formats)
+    time_format = formats.split(DELIMITER).map { |format| AUTHORIZED_FORMAT[format.downcase.to_sym] }.join('/')
     Time.now.strftime(time_format)
   end
 
-  def invalid_formats(formats, delimiter)
-    invalid_formats = []
-    formats.split(delimiter).each do |format|
-      invalid_formats << format unless AUTHORIZED_FORMAT.key?(format.downcase.to_sym)
-    end
-    invalid_formats
+  def invalid_formats(formats)
+    formats.split(DELIMITER).select { |format| !AUTHORIZED_FORMAT.key?(format.downcase.to_sym) }
   end
 end

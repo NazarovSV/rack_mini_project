@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-require_relative '../services/date_formatting_service'
+require_relative '../services/date_formatter'
 
 class RequestHandler
+  include Rack::Utils
+
   def initialize(app, **options)
     @app = app
     @delimiter = options[:delimiter] || ','
@@ -14,7 +16,7 @@ class RequestHandler
     if valid_request?(request)
       @app.call(env)
     else
-      Rack::Response.new(['Not Found'], Rack::Utils.status_code(:not_found),
+      Rack::Response.new(['Not Found'], status_code(:not_found),
                          {}).finish
     end
   end
